@@ -38,6 +38,20 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- OPTIONAL DEPENDENCIES USED FOR GroupingMultimapModel -->
+        <dependency>
+            <groupId>com.googlecode.lambdaj</groupId>
+            <artifactId>lambdaj</artifactId>
+            <version>2.4</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.google.collections</groupId>
+            <artifactId>google-collections</artifactId>
+            <version>1.0</version>
+            <optional>true</optional>
+        </dependency>
+
 
 
         <!-- TESTS -->
