@@ -216,6 +216,12 @@
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.0</version>
+                    <configuration>
+                        <source>${target.jdk}</source>
+                        <target>${target.jdk}</target>
+                        <optimize>true</optimize>
+                        <debug>true</debug>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-gpg-plugin</artifactId>
@@ -229,24 +235,11 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>2.9</version>
                 </plugin>
-                <plugin>
-                    <inherited>true</inherited>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.5.1</version>
-                    <configuration>
-                        <source>${target.jdk}</source>
-                        <target>${target.jdk}</target>
-                        <optimize>true</optimize>
-                        <debug>true</debug>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
 
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <source>${target.jdk}</source>
