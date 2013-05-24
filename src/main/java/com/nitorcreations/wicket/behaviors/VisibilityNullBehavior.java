@@ -2,8 +2,6 @@ package com.nitorcreations.wicket.behaviors;
 
 import java.util.Collection;
 
-import org.apache.commons.collections.CollectionUtils;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.model.IModel;
@@ -15,26 +13,23 @@ import org.apache.wicket.model.Model;
  * needing to be hidden or visible based on nullity of certain model object.
  */
 public final class VisibilityNullBehavior extends Behavior {
-
     private static final long serialVersionUID = 1L;
-
     private static final Behavior hiddenDefaultModelNull = new Behavior() {
         private static final long serialVersionUID = 1L;
 
         @Override
-        public void onConfigure(Component component) {
+        public void onConfigure(final Component component) {
             super.onConfigure(component);
             if (component.getDefaultModelObject() == null) {
                 component.setVisible(false);
             }
         }
     };
-
     private static final Behavior visibleDefaultModelNotNull = new Behavior() {
         private static final long serialVersionUID = 1L;
 
         @Override
-        public void onConfigure(Component component) {
+        public void onConfigure(final Component component) {
             super.onConfigure(component);
             component.setVisible(component.getDefaultModelObject() != null);
         }
@@ -55,11 +50,10 @@ public final class VisibilityNullBehavior extends Behavior {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public void onConfigure(Component component) {
+            public void onConfigure(final Component component) {
                 super.onConfigure(component);
                 component.setVisible(model.getObject() == null);
             }
-
         };
     }
 
@@ -76,11 +70,10 @@ public final class VisibilityNullBehavior extends Behavior {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public void onConfigure(Component component) {
+            public void onConfigure(final Component component) {
                 super.onConfigure(component);
                 component.setVisible(model.getObject() != null);
             }
-
         };
     }
 
@@ -119,9 +112,9 @@ public final class VisibilityNullBehavior extends Behavior {
             private static final long serialVersionUID = -6467968057103820613L;
 
             @Override
-            public void onConfigure(Component component) {
+            public void onConfigure(final Component component) {
                 super.onConfigure(component);
-                component.setVisible(!CollectionUtils.isEmpty(model.getObject()));
+                component.setVisible(!isEmpty(model.getObject()));
             }
         };
     }
@@ -140,11 +133,14 @@ public final class VisibilityNullBehavior extends Behavior {
             private static final long serialVersionUID = -6467968057103820613L;
 
             @Override
-            public void onConfigure(Component component) {
+            public void onConfigure(final Component component) {
                 super.onConfigure(component);
-                component.setVisible(CollectionUtils.isEmpty(model.getObject()));
+                component.setVisible(isEmpty(model.getObject()));
             }
         };
     }
 
+    private static boolean isEmpty(final Collection<?> object) {
+        return object == null || object.isEmpty();
+    }
 }
