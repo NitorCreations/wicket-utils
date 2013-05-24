@@ -24,3 +24,6 @@ Useful components, models and other stuff for Wicket (mainly 6) projects
 
 ### Util
 - `AjaxUtil` - helpers for common Wicket ajax tasks: `add(target, Component...)`, `add(Component...)`, `getTarget()`
+
+### Events
+- `AnnotationEventDispatcher` - scans instantiated components for `OnEvent` annotated methods and dispatches events based on payload type.
