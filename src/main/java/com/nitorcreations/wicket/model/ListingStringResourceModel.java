@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
@@ -41,30 +40,23 @@ import org.apache.wicket.util.lang.Args;
  * @param <T> the type of a single item in the list
  * @see org.apache.wicket.model.StringResourceModel#StringResourceModel(String, org.apache.wicket.model.IModel, Object...)
  */
-public class ListingStringResourceModel<T extends Serializable> extends LoadableDetachableModel<String>
-    implements IComponentAssignedModel<String> {
-
+public class ListingStringResourceModel<T extends Serializable> extends LoadableDetachableModel<String> implements IComponentAssignedModel<String> {
     private static final long serialVersionUID = 714388179253718513L;
-
     public static final String DEFAULT_SEPARATOR = ", ";
-
     private final IModel<String> defaultMessage;
     private final String messageKey;
     private final IModel<? extends List<? extends T>> model;
     private final Component component;
-
     private String separator = DEFAULT_SEPARATOR;
 
-    @SuppressWarnings("unchecked")
-    public ListingStringResourceModel(String messageKey, IModel<? extends List<? extends T>> model,
-            IModel<String> defaultMessage, Component component) {
+    public ListingStringResourceModel(final String messageKey, final IModel<? extends List<? extends T>> model, final IModel<String> defaultMessage, final Component component) {
         this.component = component;
         this.defaultMessage = Args.notNull(defaultMessage, "defaultMessage");
         this.messageKey = Args.notNull(messageKey, "message key");
         this.model = Args.notNull(model, "list model");
     }
 
-    public ListingStringResourceModel(String messageKey, IModel<? extends List<? extends T>> model) {
+    public ListingStringResourceModel(final String messageKey, final IModel<? extends List<? extends T>> model) {
         this(messageKey, model, Model.of(""), null);
     }
 
@@ -75,7 +67,7 @@ public class ListingStringResourceModel<T extends Serializable> extends Loadable
         model.detach();
     }
 
-    private List<IModel<String>> getWrappedModels(Component component) {
+    private List<IModel<String>> getWrappedModels(final Component component) {
         List<IModel<String>> list = new ArrayList<IModel<String>>();
         for (T item : model.getObject()) {
             list.add(new StringResourceModel(messageKey, component, Model.of(item)));
@@ -83,7 +75,7 @@ public class ListingStringResourceModel<T extends Serializable> extends Loadable
         return list;
     }
 
-    private String getString(Component component) {
+    private String getString(final Component component) {
         List<IModel<String>> models = getWrappedModels(component);
         if (models.isEmpty()) {
             return defaultMessage.getObject();
@@ -103,7 +95,7 @@ public class ListingStringResourceModel<T extends Serializable> extends Loadable
         return separator;
     }
 
-    public ListingStringResourceModel<T> setSeparator(String separator) {
+    public ListingStringResourceModel<T> setSeparator(final String separator) {
         this.separator = separator;
         return this;
     }
@@ -114,16 +106,15 @@ public class ListingStringResourceModel<T extends Serializable> extends Loadable
     }
 
     @Override
-    public IWrapModel<String> wrapOnAssignment(Component component) {
+    public IWrapModel<String> wrapOnAssignment(final Component component) {
         return new AssignmentWrapper(component);
     }
 
     private class AssignmentWrapper extends LoadableDetachableModel<String> implements IWrapModel<String> {
         private static final long serialVersionUID = -7181093446442329177L;
-
         private final Component assignedComponent;
 
-        public AssignmentWrapper(Component component) {
+        public AssignmentWrapper(final Component component) {
             this.assignedComponent = component;
         }
 
