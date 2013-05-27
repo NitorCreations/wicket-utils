@@ -19,6 +19,9 @@ Useful components, models and other stuff for Wicket (mainly 6) projects
 - `NullWrapperModel(IModel first, IModel second)` - returns `second.getObject()` if `first.getObject()` is `null`
 - `StringFormatModel` - works like `String.format(..)`
 
+### Behaviors
+- `VisibilityNullBehavior` Factories for `Behavior`s which sets the `Component`'s visibility based on the default model's or some other components model object. Used to reduce boiler-plate code with typical scenarios of components needing to be hidden or visible based on nullity of certain model object.
+
 ### Protocol.http
 - `WicketAjaxTimeoutFilter` - refreshes the page on ajax request after session has expired. Works with Wicket 6.
 
