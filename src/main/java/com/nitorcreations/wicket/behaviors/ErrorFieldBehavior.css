@@ -1,0 +1,7 @@
+label.error {
+    border: none !important;
+    color: #B72F2F !important;
+}
+.error {
+	border: 1px solid #B72F2F !important;
+}
