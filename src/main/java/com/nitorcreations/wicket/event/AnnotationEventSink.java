@@ -1,10 +1,6 @@
 package com.nitorcreations.wicket.event;
 
-import static java.lang.reflect.Modifier.isPublic;
-import static java.util.Arrays.asList;
-import static org.apache.commons.lang3.ClassUtils.getAllInterfaces;
-import static org.apache.commons.lang3.ClassUtils.getAllSuperclasses;
-
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
@@ -12,6 +8,11 @@ import java.util.Set;
 
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.util.collections.ClassMetaCache;
+
+import static java.lang.reflect.Modifier.isPublic;
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.ClassUtils.getAllInterfaces;
+import static org.apache.commons.lang3.ClassUtils.getAllSuperclasses;
 
 public class AnnotationEventSink {
     private final ClassMetaCache<Set<Method>> onEventMethodsByType = new ClassMetaCache<Set<Method>>();
@@ -83,7 +84,9 @@ public class AnnotationEventSink {
                 for (Method method : onEventMethodsForType) {
                     method.invoke(sink, payload);
                 }
-            } catch (ReflectiveOperationException e) {
+            } catch (InvocationTargetException e) {
+                throw new IllegalStateException("Failed to invoke onEvent method", e);
+            } catch (IllegalAccessException e) {
                 throw new IllegalStateException("Failed to invoke onEvent method", e);
             }
         }
