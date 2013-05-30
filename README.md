@@ -11,7 +11,7 @@ Available in Maven central repository. Add this to your `pom.xml`
 <dependency>
   <groupId>com.nitorcreations</groupId>
   <artifactId>wicket-components</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 ```
 
