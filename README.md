@@ -3,6 +3,20 @@ wicket-utils
 
 Useful components, models and other stuff for Wicket (mainly 6) projects
 
+## Maven
+
+Available in Maven central repository. Add this to your `pom.xml`
+
+```xml
+<dependency>
+  <groupId>com.nitorcreations</groupId>
+  <artifactId>wicket-components</artifactId>
+  <version>1.0</version>
+</dependency>
+```
+
+## Contents
+
 ### Components
 - `ViewSizeToolbar` - change the view size of a `DataTable`
 - `MaxLengthTextField` 
