@@ -35,6 +35,7 @@ Available in Maven central repository. Add this to your `pom.xml`
 
 ### Behaviors
 - `VisibilityNullBehavior` Factories for `Behavior`s which sets the `Component`'s visibility based on the default model's or some other components model object. Used to reduce boiler-plate code with typical scenarios of components needing to be hidden or visible based on nullity of certain model object.
+- `ErrorFieldBehavior` - Adds red borders to any components with validation errors (Since 1.1)
 
 ### Protocol.http
 - `WicketAjaxTimeoutFilter` - refreshes the page on ajax request after session has expired. Works with Wicket 6.
@@ -44,3 +45,8 @@ Available in Maven central repository. Add this to your `pom.xml`
 
 ### Events
 - `AnnotationEventDispatcher` - scans instantiated components for `OnEvent` annotated methods and dispatches events based on payload type.
+
+### Validators
+- `CheckedValidator` - validates that a checkbox is checked (Since 1.1)
+- `MatchingValidator` - validates that the value matches a given Hamcrest matcher (Since 1.1)
+- `PhoneNumberValidator` - validates that the String value contains only `0-9+-() ` (Since 1.1)
