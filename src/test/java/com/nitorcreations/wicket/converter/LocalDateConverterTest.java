@@ -1,28 +1,27 @@
 package com.nitorcreations.wicket.converter;
 
+import static com.nitorcreations.Matchers.serializable;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
+import org.apache.wicket.util.convert.ConversionException;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.nitorcreations.junit.runners.NestedRunner;
-import org.apache.wicket.util.convert.ConversionException;
-
-import static com.nitorcreations.Matchers.serializable;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
 
 @RunWith(NestedRunner.class)
 public class LocalDateConverterTest {
-
     LocalDateConverter converter;
 
-    private void assertConverted(String str, int year, int month, int day) {
+    void assertConverted(String str, int year, int month, int day) {
         assertThat(converter.convertToObject(str, null), is(new LocalDate(year, month, day)));
     }
 
-    private void assertNotConverted(final String str) {
+    void assertNotConverted(final String str) {
         try {
             converter.convertToObject(str, null);
         } catch (ConversionException ce) {
@@ -30,11 +29,11 @@ public class LocalDateConverterTest {
         }
     }
 
-    private void assertString(LocalDate lt, String target) {
+    void assertString(LocalDate lt, String target) {
         assertThat(converter.convertToString(lt, null), is(target));
     }
 
-    private void assertString(int year, int month, int day, String target) {
+    void assertString(int year, int month, int day, String target) {
         assertString(new LocalDate(year, month, day), target);
     }
 
@@ -55,7 +54,6 @@ public class LocalDateConverterTest {
             assertConverted("13.12.2011", 2011, 12, 13);
             assertConverted("1.1.13", 13, 1, 1);
             assertConverted("13.12.11", 11, 12, 13);
-
             assertNotConverted("asd");
             assertNotConverted("23.59");
             assertNotConverted("13.1.");

@@ -1,29 +1,28 @@
 package com.nitorcreations.wicket.converter;
 
-import org.joda.time.LocalTime;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.nitorcreations.junit.runners.NestedRunner;
-import org.apache.wicket.util.convert.ConversionException;
-
 import static com.nitorcreations.Matchers.serializable;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+import org.apache.wicket.util.convert.ConversionException;
+import org.joda.time.LocalTime;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.nitorcreations.junit.runners.NestedRunner;
+
 @RunWith(NestedRunner.class)
 public class LocalTimeConverterTest {
-
     LocalTimeConverter converter;
 
-    private void assertConverted(String str, int hour, int minute) {
+    void assertConverted(String str, int hour, int minute) {
         assertThat(converter.convertToObject(str, null), is(new LocalTime(hour, minute)));
     }
 
-    private void assertNotConverted(final String str) {
+    void assertNotConverted(final String str) {
         try {
             converter.convertToObject(str, null);
             fail("Did not raise ConversionException");
@@ -33,11 +32,11 @@ public class LocalTimeConverterTest {
         }
     }
 
-    private void assertString(LocalTime lt, String target) {
+    void assertString(LocalTime lt, String target) {
         assertThat(converter.convertToString(lt, null), is(target));
     }
 
-    private void assertString(int hour, int min, String target) {
+    void assertString(int hour, int min, String target) {
         assertString(new LocalTime(hour, min), target);
     }
 
@@ -59,7 +58,6 @@ public class LocalTimeConverterTest {
             assertConverted("15:09", 15, 9); // PM
             assertConverted("00:00", 0, 0);
             assertConverted("23:59", 23, 59);
-
             assertNotConverted("asd");
             assertNotConverted("23.59");
             assertNotConverted("23:59.59");
@@ -73,7 +71,6 @@ public class LocalTimeConverterTest {
             assertString(11, 32, "11:32");
             assertString(null, "");
         }
-
     }
 
     public class WithCustomPattern {
@@ -89,7 +86,6 @@ public class LocalTimeConverterTest {
             assertConverted("12:00 AM", 0, 0);
             assertConverted("12:00 PM", 12, 0);
             assertConverted("11:59 PM", 23, 59);
-
             assertNotConverted("8:05");
             assertNotConverted("13:01");
         }
@@ -101,6 +97,5 @@ public class LocalTimeConverterTest {
             assertString(11, 32, "11:32 AM");
             assertString(null, "");
         }
-
     }
 }

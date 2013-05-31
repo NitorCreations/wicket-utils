@@ -21,7 +21,7 @@ import org.junit.Test;
 import com.nitorcreations.test.wicket.resources.MockStringResourceLoader;
 
 public class ListingStringResourceModelTest {
-    private MockStringResourceLoader stringResourceLoader;
+    MockStringResourceLoader stringResourceLoader;
     private WicketTester wicketTester;
     private ListingStringResourceModel<?> model;
     private Label c;

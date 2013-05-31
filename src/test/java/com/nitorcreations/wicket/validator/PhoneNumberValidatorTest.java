@@ -1,10 +1,7 @@
 package com.nitorcreations.wicket.validator;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
-import org.junit.Before;
-import org.junit.Test;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
 
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.form.Form;
@@ -12,15 +9,15 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
-
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
+import org.junit.Test;
 
 public class PhoneNumberValidatorTest {
-
-    private WicketTester wicketTester;
-
-    private TextField<String> field;
+    WicketTester wicketTester;
+    TextField<String> field;
 
     @Before
     public void setup() {
@@ -29,8 +26,7 @@ public class PhoneNumberValidatorTest {
         field = new TextField<String>("phone", new Model<String>(), String.class);
         field.add(new PhoneNumberValidator());
         form.add(field);
-        wicketTester.startComponentInPage(form,
-                Markup.of("<form wicket:id=\"form\"><input type=\"text\" wicket:id=\"phone\" /></form>"));
+        wicketTester.startComponentInPage(form, Markup.of("<form wicket:id=\"form\"><input type=\"text\" wicket:id=\"phone\" /></form>"));
     }
 
     @Test
@@ -57,6 +53,7 @@ public class PhoneNumberValidatorTest {
 
             @Override
             public void describeTo(Description description) {
+                // do nothing
             }
         };
     }

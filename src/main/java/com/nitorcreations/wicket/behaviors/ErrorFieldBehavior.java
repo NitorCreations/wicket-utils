@@ -54,12 +54,12 @@ public final class ErrorFieldBehavior extends AttributeAppender {
     /**
      * Model that returns "error" if the bound component has validation errors.
      */
-    private static class ErrorFieldModel extends AbstractReadOnlyModel<String> {
+    static class ErrorFieldModel extends AbstractReadOnlyModel<String> {
         private static final long serialVersionUID = 1L;
         private Component component;
 
-        public void bind(Component component) {
-            this.component = Args.notNull(component, "Component");
+        public void bind(Component toComponent) {
+            component = Args.notNull(toComponent, "Component");
         }
 
         @Override

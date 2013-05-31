@@ -140,7 +140,7 @@ public final class VisibilityNullBehavior extends Behavior {
         };
     }
 
-    private static boolean isEmpty(final Collection<?> object) {
+    static boolean isEmpty(final Collection<?> object) {
         return object == null || object.isEmpty();
     }
 }

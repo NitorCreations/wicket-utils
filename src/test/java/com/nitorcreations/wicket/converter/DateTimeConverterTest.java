@@ -1,28 +1,27 @@
 package com.nitorcreations.wicket.converter;
 
+import static com.nitorcreations.Matchers.serializable;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
+import org.apache.wicket.util.convert.ConversionException;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.nitorcreations.junit.runners.NestedRunner;
-import org.apache.wicket.util.convert.ConversionException;
-
-import static com.nitorcreations.Matchers.serializable;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
 
 @RunWith(NestedRunner.class)
 public class DateTimeConverterTest {
-
     DateTimeConverter converter;
 
-    private void assertConverted(String str, int year, int month, int day, int hour, int minutes) {
+    void assertConverted(String str, int year, int month, int day, int hour, int minutes) {
         assertThat(converter.convertToObject(str, null), is(new DateTime(year, month, day, hour, minutes)));
     }
 
-    private void assertNotConverted(final String str) {
+    void assertNotConverted(final String str) {
         try {
             converter.convertToObject(str, null);
         } catch (ConversionException ce) {
@@ -30,11 +29,11 @@ public class DateTimeConverterTest {
         }
     }
 
-    private void assertString(DateTime lt, String target) {
+    void assertString(DateTime lt, String target) {
         assertThat(converter.convertToString(lt, null), is(target));
     }
 
-    private void assertString(int year, int month, int day, int hour, int minutes, String target) {
+    void assertString(int year, int month, int day, int hour, int minutes, String target) {
         assertString(new DateTime(year, month, day, hour, minutes), target);
     }
 
@@ -55,7 +54,6 @@ public class DateTimeConverterTest {
             assertConverted("13.12.2011 12:13", 2011, 12, 13, 12, 13);
             assertConverted("1.1.13 12:13", 13, 1, 1, 12, 13);
             assertConverted("13.12.11 1:12", 11, 12, 13, 1, 12);
-
             assertNotConverted("asd");
             assertNotConverted("23.59");
             assertNotConverted("13.1.");
@@ -95,5 +93,4 @@ public class DateTimeConverterTest {
             assertString(null, "");
         }
     }
-
 }

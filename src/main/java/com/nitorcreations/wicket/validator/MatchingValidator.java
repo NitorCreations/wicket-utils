@@ -1,10 +1,9 @@
 package com.nitorcreations.wicket.validator;
 
-import org.hamcrest.Matcher;
-
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
+import org.hamcrest.Matcher;
 
 /**
  * Validated that the value of target {@link org.apache.wicket.validation.IValidatable} matches the matcher returned by {@link #getMatcher()}.
@@ -15,7 +14,6 @@ import org.apache.wicket.validation.ValidationError;
  *         the type of the validatable's value
  */
 public abstract class MatchingValidator<T> implements IValidator<T> {
-
     private static final long serialVersionUID = 930181690154630166L;
 
     /**
@@ -39,7 +37,7 @@ public abstract class MatchingValidator<T> implements IValidator<T> {
      * @param item the {@link org.apache.wicket.validation.IValidatable}'s value
      * @return the error to add to the {@link org.apache.wicket.validation.IValidatable}
      */
-    protected ValidationError createValidationError(T item) {
+    protected ValidationError createValidationError(@SuppressWarnings("unused") T item) {
         return new ValidationError(this);
     }
 }

@@ -46,7 +46,7 @@ public class ListingStringResourceModel<T extends Serializable> extends Loadable
     private final IModel<String> defaultMessage;
     private final String messageKey;
     private final IModel<? extends List<? extends T>> model;
-    private final Component component;
+    final Component component;
     private String separator = DEFAULT_SEPARATOR;
 
     public ListingStringResourceModel(final String messageKey, final IModel<? extends List<? extends T>> model, final IModel<String> defaultMessage, final Component component) {
@@ -67,16 +67,16 @@ public class ListingStringResourceModel<T extends Serializable> extends Loadable
         model.detach();
     }
 
-    private List<IModel<String>> getWrappedModels(final Component component) {
+    private List<IModel<String>> getWrappedModels(final Component ofComponent) {
         List<IModel<String>> list = new ArrayList<IModel<String>>();
         for (T item : model.getObject()) {
-            list.add(new StringResourceModel(messageKey, component, Model.of(item)));
+            list.add(new StringResourceModel(messageKey, ofComponent, Model.of(item)));
         }
         return list;
     }
 
-    private String getString(final Component component) {
-        List<IModel<String>> models = getWrappedModels(component);
+    String getString(final Component ofComponent) {
+        List<IModel<String>> models = getWrappedModels(ofComponent);
         if (models.isEmpty()) {
             return defaultMessage.getObject();
         }
@@ -106,12 +106,12 @@ public class ListingStringResourceModel<T extends Serializable> extends Loadable
     }
 
     @Override
-    public IWrapModel<String> wrapOnAssignment(final Component component) {
-        return new AssignmentWrapper(component);
+    public IWrapModel<String> wrapOnAssignment(final Component componentToWrap) {
+        return new AssignmentWrapper(componentToWrap);
     }
 
     private class AssignmentWrapper extends LoadableDetachableModel<String> implements IWrapModel<String> {
-        private static final long serialVersionUID = -7181093446442329177L;
+        private static final long serialVersionUID = 1L;
         private final Component assignedComponent;
 
         public AssignmentWrapper(final Component component) {
@@ -124,6 +124,7 @@ public class ListingStringResourceModel<T extends Serializable> extends Loadable
             ListingStringResourceModel.this.detach();
         }
 
+        @SuppressWarnings("synthetic-access")
         @Override
         protected void onDetach() {
             if (ListingStringResourceModel.this.component == null) {
@@ -140,9 +141,8 @@ public class ListingStringResourceModel<T extends Serializable> extends Loadable
         protected String load() {
             if (ListingStringResourceModel.this.component != null) {
                 return ListingStringResourceModel.this.getObject();
-            } else {
-                return getString(assignedComponent);
             }
+            return getString(assignedComponent);
         }
     }
 }
