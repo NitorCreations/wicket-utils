@@ -10,15 +10,15 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.lang.Args;
 
 public final class ErrorFieldBehavior extends AttributeAppender {
+    private static final long serialVersionUID = 1L;
     public static final String ATTRIBUTE = "class";
     public static final String SEPARATOR = " ";
     public static final String ERROR_CLASS = "error";
-
     private final ErrorFieldModel errorFieldModel;
 
     private ErrorFieldBehavior() {
         super(ATTRIBUTE, new ErrorFieldModel(), SEPARATOR);
-        this.errorFieldModel = (ErrorFieldModel) getReplaceModel();
+        errorFieldModel = (ErrorFieldModel) getReplaceModel();
     }
 
     public static ErrorFieldBehavior instance() {
@@ -39,6 +39,7 @@ public final class ErrorFieldBehavior extends AttributeAppender {
      * Css reference for the ErrorFieldBehavior styles.
      */
     public static class ErrorFieldCssReference extends PackageResourceReference {
+        private static final long serialVersionUID = 1L;
         private static final ErrorFieldCssReference INSTANCE = new ErrorFieldCssReference();
 
         private ErrorFieldCssReference() {
@@ -54,7 +55,7 @@ public final class ErrorFieldBehavior extends AttributeAppender {
      * Model that returns "error" if the bound component has validation errors.
      */
     private static class ErrorFieldModel extends AbstractReadOnlyModel<String> {
-
+        private static final long serialVersionUID = 1L;
         private Component component;
 
         public void bind(Component component) {
