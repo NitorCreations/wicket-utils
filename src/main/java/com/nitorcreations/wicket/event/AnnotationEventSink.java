@@ -3,6 +3,7 @@ package com.nitorcreations.wicket.event;
 import static com.nitorcreations.wicket.event.CompatibleTypesCache.getCompatibleTypes;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Arrays.asList;
+import static org.apache.wicket.RuntimeConfigurationType.DEVELOPMENT;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,6 +11,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.util.collections.ClassMetaCache;
 
@@ -18,14 +20,11 @@ public class AnnotationEventSink {
     private final ClassMetaCache<Set<Method>> onEventMethodsByPayloadType = new ClassMetaCache<Set<Method>>();
 
     public AnnotationEventSink(final Class<?> clazz) {
-        for (Method method : allMethods(clazz)) {
+        for (Method method : getAnnotatedMethods(clazz)) {
             if (method.isAnnotationPresent(OnEvent.class)) {
-                if (!isPublic(method.getModifiers())) {
-                    throw new RuntimeException(buildError(method, "@OnEvent annotated methods must be public"));
-                }
                 Class<?> parameterTypes[] = method.getParameterTypes();
                 if (parameterTypes.length != 1) {
-                    throw new RuntimeException(buildError(method, "@OnEvent annotated mehods must have exactly one parameter"));
+                    continue;
                 }
                 Class<?> parameterType = parameterTypes[0];
                 addOnEventMethodForType(parameterType, method);
@@ -33,11 +32,32 @@ public class AnnotationEventSink {
         }
     }
 
-    private Collection<Method> allMethods(final Class<?> clazz) {
-        Set<Method> allMethods = new HashSet<Method>();
-        allMethods.addAll(asList(clazz.getMethods()));
-        allMethods.addAll(asList(clazz.getDeclaredMethods()));
-        return allMethods;
+    private Collection<Method> getAnnotatedMethods(final Class<?> clazz) {
+        Set<Method> annotatedMethods = new HashSet<Method>();
+        if (Application.get().getConfigurationType() == DEVELOPMENT) {
+            Set<Method> allMethods = new HashSet<Method>();
+            allMethods.addAll(asList(clazz.getMethods()));
+            allMethods.addAll(asList(clazz.getDeclaredMethods()));
+            for (Method method : allMethods) {
+                if (method.isAnnotationPresent(OnEvent.class)) {
+                    if (!isPublic(method.getModifiers())) {
+                        throw new RuntimeException(buildError(method, "@OnEvent annotated methods must be public"));
+                    }
+                    Class<?> parameterTypes[] = method.getParameterTypes();
+                    if (parameterTypes.length != 1) {
+                        throw new RuntimeException(buildError(method, "@OnEvent annotated mehods must have exactly one parameter"));
+                    }
+                    annotatedMethods.add(method);
+                }
+            }
+        } else {
+            for (Method method : clazz.getMethods()) {
+                if (method.isAnnotationPresent(OnEvent.class) && method.getParameterTypes().length == 1) {
+                    annotatedMethods.add(method);
+                }
+            }
+        }
+        return annotatedMethods;
     }
 
     private String buildError(final Method m, final String msg) {

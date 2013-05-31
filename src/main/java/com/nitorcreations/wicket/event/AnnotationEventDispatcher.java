@@ -14,8 +14,7 @@ public class AnnotationEventDispatcher implements IEventDispatcher, IComponentIn
     @Override
     public void onInstantiation(final Component component) {
         Class<?> componentClass = component.getClass();
-        AnnotationEventSink eventSink = eventSinkByClass.get(componentClass);
-        if (eventSink == null && containsOnEventMethod(componentClass)) {
+        if (eventSinkByClass.get(componentClass) == null && containsOnEventMethod(componentClass)) {
             eventSinkByClass.put(componentClass, new AnnotationEventSink(componentClass));
         }
     }
@@ -31,8 +30,7 @@ public class AnnotationEventDispatcher implements IEventDispatcher, IComponentIn
 
     @Override
     public void dispatchEvent(final Object sink, final IEvent<?> event, final Component component) {
-        Class<?> sinkClass = sink.getClass();
-        AnnotationEventSink eventSink = eventSinkByClass.get(sinkClass);
+        AnnotationEventSink eventSink = eventSinkByClass.get(sink.getClass());
         if (eventSink != null) {
             eventSink.onEvent(sink, event);
         }
