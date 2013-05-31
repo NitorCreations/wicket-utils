@@ -1,5 +1,9 @@
 package com.nitorcreations.wicket.event;
 
+import static com.nitorcreations.wicket.event.CompatibleTypesCache.getCompatibleTypes;
+import static java.lang.reflect.Modifier.isPublic;
+import static java.util.Arrays.asList;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -9,14 +13,9 @@ import java.util.Set;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.util.collections.ClassMetaCache;
 
-import static java.lang.reflect.Modifier.isPublic;
-import static java.util.Arrays.asList;
-import static org.apache.commons.lang3.ClassUtils.getAllInterfaces;
-import static org.apache.commons.lang3.ClassUtils.getAllSuperclasses;
-
 public class AnnotationEventSink {
-    private final ClassMetaCache<Set<Method>> onEventMethodsByType = new ClassMetaCache<Set<Method>>();
-    private final ClassMetaCache<Set<Class<?>>> allTypesByType = new ClassMetaCache<Set<Class<?>>>();
+    private final ClassMetaCache<Set<Method>> onEventMethodsByParameterType = new ClassMetaCache<Set<Method>>();
+    private final ClassMetaCache<Set<Method>> onEventMethodsByPayloadType = new ClassMetaCache<Set<Method>>();
 
     public AnnotationEventSink(final Class<?> clazz) {
         for (Method method : allMethods(clazz)) {
@@ -46,49 +45,52 @@ public class AnnotationEventSink {
     }
 
     private void addOnEventMethodForType(final Class<?> type, final Method method) {
-        Set<Method> methods = onEventMethodsByType.get(type);
+        Set<Method> methods = onEventMethodsByParameterType.get(type);
         if (methods == null) {
             methods = new HashSet<Method>();
-            onEventMethodsByType.put(type, methods);
+            onEventMethodsByParameterType.put(type, methods);
         }
         methods.add(method);
     }
 
     public void onEvent(final Object sink, final IEvent<?> event) {
-        if (event != null) {
-            Object payload = event.getPayload();
-            if (payload != null) {
-                for (Class<?> type : getAllTypes(payload.getClass())) {
-                    onEventForType(type, sink, payload);
-                }
-            }
+        if (event == null) {
+            return;
+        }
+        Object payload = event.getPayload();
+        if (payload == null) {
+            return;
+        }
+        Set<Method> onEventMethods = getOnEventMethods(payload.getClass());
+        if (!onEventMethods.isEmpty()) {
+            onEvent(onEventMethods, sink, payload);
         }
     }
 
-    private Set<Class<?>> getAllTypes(final Class<?> clazz) {
-        Set<Class<?>> types = allTypesByType.get(clazz);
-        if (types == null) {
-            types = new HashSet<Class<?>>();
-            types.add(clazz);
-            types.addAll(getAllSuperclasses(clazz));
-            types.addAll(getAllInterfaces(clazz));
-            allTypesByType.put(clazz, types);
+    private Set<Method> getOnEventMethods(Class<?> payloadType) {
+        Set<Method> onEventMethods = onEventMethodsByPayloadType.get(payloadType);
+        if (onEventMethods == null) {
+            onEventMethods = new HashSet<Method>();
+            for (Class<?> type : getCompatibleTypes(payloadType)) {
+                Set<Method> methods = onEventMethodsByParameterType.get(type);
+                if (methods != null) {
+                    onEventMethods.addAll(methods);
+                }
+            }
+            onEventMethodsByPayloadType.put(payloadType, onEventMethods);
         }
-        return types;
+        return onEventMethods;
     }
 
-    private void onEventForType(final Class<?> type, final Object sink, final Object payload) {
-        Set<Method> onEventMethodsForType = onEventMethodsByType.get(type);
-        if (onEventMethodsForType != null) {
-            try {
-                for (Method method : onEventMethodsForType) {
-                    method.invoke(sink, payload);
-                }
-            } catch (InvocationTargetException e) {
-                throw new IllegalStateException("Failed to invoke onEvent method", e);
-            } catch (IllegalAccessException e) {
-                throw new IllegalStateException("Failed to invoke onEvent method", e);
+    private void onEvent(final Set<Method> onEventMethods, final Object sink, final Object payload) {
+        try {
+            for (Method method : onEventMethods) {
+                method.invoke(sink, payload);
             }
+        } catch (InvocationTargetException e) {
+            throw new IllegalStateException("Failed to invoke @OnEvent method", e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException("Failed to invoke @OnEvent method", e);
         }
     }
 }
