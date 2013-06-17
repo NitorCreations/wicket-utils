@@ -1,23 +1,21 @@
 package com.nitorcreations.wicket.validator;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
-import org.junit.Test;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.ValidationError;
-
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
+import org.junit.Test;
 
 public class MatchingValidatorTest {
-
     @Test
     public void noErrorWhenMatched() {
         assertThat(validatorFor(equalTo(2)), not(addsErrorForValue(2)));
@@ -30,7 +28,7 @@ public class MatchingValidatorTest {
 
     private static <T> MatchingValidator<T> validatorFor(final Matcher<T> matcher) {
         return new MatchingValidator<T>() {
-            private static final long serialVersionUID = 5478117617067758235L;
+            private static final long serialVersionUID = 1L;
 
             @Override
             protected Matcher<T> getMatcher() {
@@ -41,7 +39,6 @@ public class MatchingValidatorTest {
 
     private static Matcher<MatchingValidator<Integer>> addsErrorForValue(final Integer value) {
         return new TypeSafeMatcher<MatchingValidator<Integer>>() {
-            @SuppressWarnings("unchecked")
             @Override
             protected boolean matchesSafely(MatchingValidator<Integer> item) {
                 TestValidatable validatable = new TestValidatable(value);
@@ -57,9 +54,7 @@ public class MatchingValidatorTest {
     }
 
     private static class TestValidatable implements IValidatable<Integer> {
-
         private final Integer value;
-
         private boolean errorAdded = false;
 
         public TestValidatable(Integer value) {
@@ -77,7 +72,7 @@ public class MatchingValidatorTest {
 
         @Override
         public void error(IValidationError error) {
-            assertThat(((ValidationError)error).getKeys(), contains("MatchingValidator"));
+            assertThat(((ValidationError) error).getKeys(), contains("MatchingValidator"));
             errorAdded = true;
         }
 
@@ -91,5 +86,4 @@ public class MatchingValidatorTest {
             return Model.of(value);
         }
     }
-
 }

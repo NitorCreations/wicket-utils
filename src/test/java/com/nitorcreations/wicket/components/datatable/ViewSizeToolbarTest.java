@@ -1,17 +1,12 @@
 package com.nitorcreations.wicket.components.datatable;
 
+import static com.nitorcreations.test.wicket.Selection.select;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hamcrest.Description;
-import org.hamcrest.Factory;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import com.nitorcreations.test.wicket.resources.MockStringResourceLoader;
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
@@ -26,29 +21,26 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
+import org.hamcrest.Description;
+import org.hamcrest.Factory;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import static com.nitorcreations.test.wicket.Selection.select;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import com.nitorcreations.test.wicket.resources.MockStringResourceLoader;
 
 public class ViewSizeToolbarTest {
-
     private static final String MARKUP_STRING = "<wicket:head /><form wicket:id=\"form\"><table wicket:id=\"table\" /></form>";
-
     WicketTester wicketTester;
-
     Markup markup;
-
     @Mock
-    ISortableDataProvider<Integer,String> dataProvider;
-
+    ISortableDataProvider<Integer, String> dataProvider;
     Form<?> form;
-
-    DataTable<Integer,String> table;
-
+    DataTable<Integer, String> table;
     ViewSizeToolbar toolbar;
-
-    private MockStringResourceLoader mockStringResourceLoader;
+    MockStringResourceLoader mockStringResourceLoader;
 
     public void startWithColumns(int colNumber) {
         MockitoAnnotations.initMocks(this);
@@ -62,14 +54,12 @@ public class ViewSizeToolbarTest {
             }
         });
         mockStringResourceLoader.expectStringMessage(ViewSizeToolbar.class, "ViewSizeToolbar.item", "${} pcs.");
-
-        List<IColumn<Integer,String>> columns = new ArrayList<IColumn<Integer,String>>(colNumber);
+        List<IColumn<Integer, String>> columns = new ArrayList<IColumn<Integer, String>>(colNumber);
         for (int i = 0; i < colNumber; i++) {
-            columns.add(new PropertyColumn<Integer,String>(Model.of("Int"), "intValue()"));
+            columns.add(new PropertyColumn<Integer, String>(Model.of("Int"), "intValue()"));
         }
-
         form = new Form<Void>("form");
-        table = new DefaultDataTable<Integer,String>("table", columns, dataProvider, 10);
+        table = new DefaultDataTable<Integer, String>("table", columns, dataProvider, 10);
         table.setOutputMarkupId(true);
         form.add(table);
         table.addTopToolbar(toolbar = new ViewSizeToolbar(table));
@@ -97,12 +87,9 @@ public class ViewSizeToolbarTest {
     @Test
     public void colspanChangesWithTableWidth() {
         startWithColumns(2);
-        assertThat(wicketTester.getTagByWicketId("span").getAttribute("colspan"),
-                is("2"));
-
+        assertThat(wicketTester.getTagByWicketId("span").getAttribute("colspan"), is("2"));
         startWithColumns(4);
-        assertThat(wicketTester.getTagByWicketId("span").getAttribute("colspan"),
-                is("4"));
+        assertThat(wicketTester.getTagByWicketId("span").getAttribute("colspan"), is("4"));
     }
 
     private DropDownChoice<Long> viewSizeChoice() {
@@ -111,13 +98,11 @@ public class ViewSizeToolbarTest {
 
     @SuppressWarnings("unchecked")
     @Factory
-    public static <T, X extends Component> Matcher<X> hasDisplayValueFor(final T object,
-            final Matcher<?> displayValue) {
+    public static <T, X extends Component> Matcher<X> hasDisplayValueFor(final T object, final Matcher<?> displayValue) {
         return (Matcher<X>) new TypeSafeDiagnosingMatcher<AbstractChoice<?, T>>() {
             @Override
             public void describeTo(Description description) {
-                description.appendText("display value for ").appendValue(object).appendText(" should be ")
-                        .appendDescriptionOf(displayValue);
+                description.appendText("display value for ").appendValue(object).appendText(" should be ").appendDescriptionOf(displayValue);
             }
 
             @Override

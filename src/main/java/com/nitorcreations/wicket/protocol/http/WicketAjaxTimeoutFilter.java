@@ -2,6 +2,7 @@ package com.nitorcreations.wicket.protocol.http;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -21,11 +22,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author Reko Jokelainen / Nitor Creations
  */
 public class WicketAjaxTimeoutFilter implements Filter {
-
     public static final String AJAX_HEADER_PARAM = "ajaxHeaderName";
-
     public static final String AJAX_HEADER_DEFAULT = "Wicket-Ajax";
-
     private String ajaxHeaderName;
 
     @Override
@@ -35,12 +33,11 @@ public class WicketAjaxTimeoutFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-            ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         final HttpServletRequest req = (HttpServletRequest) request;
         final HttpServletResponse resp = (HttpServletResponse) response;
-
         if (!hasSession(req) && isWicketAjax(req)) {
+            @SuppressWarnings("resource")
             final PrintWriter writer = resp.getWriter();
             writer.append(getResponseString());
             writer.flush();
@@ -58,19 +55,13 @@ public class WicketAjaxTimeoutFilter implements Filter {
     }
 
     private String getResponseString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("<ajax-response>");
-        sb.append("<evaluate>");
-        sb.append("<![CDATA[");
-        sb.append("(function(){window.location.reload();})();");
-        sb.append("]]>");
-        sb.append("</evaluate>");
-        sb.append("</ajax-response>");
-        return sb.toString();
+        return "<ajax-response><evaluate><![CDATA[(function(){window.location.reload();})();]]></evaluate></ajax-response>";
     }
 
     @Override
-    public void destroy() {}
+    public void destroy() {
+        // do nothing
+    }
 
     public String getAjaxHeaderName() {
         return ajaxHeaderName;
@@ -79,5 +70,4 @@ public class WicketAjaxTimeoutFilter implements Filter {
     public void setAjaxHeaderName(String ajaxHeaderName) {
         this.ajaxHeaderName = ajaxHeaderName;
     }
-
 }

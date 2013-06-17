@@ -13,11 +13,11 @@ import org.junit.Test;
 
 import com.nitorcreations.test.TestApplication;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "unused", "serial" })
 public class AnnotationEventDispatcherTest {
     private final TestApplication testApp = new TestApplication();
     private final WicketTester tester = new WicketTester(testApp);
-    private final EventMock mock = mock(EventMock.class);
+    final EventMock mock = mock(EventMock.class);
     private Component component;
 
     @Before
@@ -131,7 +131,6 @@ public class AnnotationEventDispatcherTest {
             // do nothing
         }
 
-        @SuppressWarnings("unused")
         public void onStringEvent(final String message, final String allowed) {
             mock.onStringEvent();
         }
@@ -148,10 +147,10 @@ public class AnnotationEventDispatcherTest {
 
         public void onExceptionEvent() {
             // do nothing
-        };
+        }
 
         public void onRuntimeExceptionEvent() {
             // do nothing
-        };
+        }
     }
 }

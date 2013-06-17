@@ -1,26 +1,23 @@
 package com.nitorcreations.wicket.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.util.MapModel;
-import org.apache.wicket.util.tester.WicketTester;
-
 import static com.nitorcreations.Matchers.serializable;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.MapModel;
+import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Before;
+import org.junit.Test;
+
+@SuppressWarnings("unused")
 public class MapEntryModelTest {
-
     WicketTester wicketTester = new WicketTester();
-
     Map<Integer, String> map;
-
     MapEntryModel<Integer, String> model;
 
     @Before
