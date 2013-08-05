@@ -1,3 +1,8 @@
+# 1.4
+- Added `SetConverter` similar to `ListConverter`
+- Added `SetToListWrapperModel` to facilitate using sets as the backing collection for, e.g., list views 
+- `ListConverter` and `SetConverter` now both convert empty string to empty collection instead of failing
+
 # 1.3
 - Added `ListConverter` to convert strings to lists of objects and back, e.g., with TextFields
 
