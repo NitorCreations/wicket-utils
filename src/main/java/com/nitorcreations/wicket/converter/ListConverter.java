@@ -44,8 +44,10 @@ public class ListConverter<T> implements IConverter<List<T>> {
     public List<T> convertToObject(String value, Locale locale) {
         final IConverter<T> converter = getInternalConverter();
         final List<T> objects = new ArrayList<T>();
-        for (String s : value.split(separatorRegexp)) {
-            objects.add(converter.convertToObject(s, locale));
+        if (StringUtils.isNotBlank(value)) {
+            for (String s : value.split(separatorRegexp)) {
+                objects.add(converter.convertToObject(s, locale));
+            }
         }
         return objects;
     }

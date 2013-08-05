@@ -14,6 +14,7 @@ import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.tester.WicketTester;
 
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -57,6 +58,14 @@ public class ListConverterTest {
                 new TestObject("Baz")
         ));
         assertThat(converter.convertToString(testObjectList, null), is("Foo, Bar, Baz"));
+    }
+
+    @Test
+    public void convertsEmptyStringToEmptyList() {
+        ListConverter<Integer> converter = new ListConverter<Integer>(Integer.class);
+        List<Integer> integers = converter.convertToObject("", Locale.ENGLISH);
+        assertThat(integers, empty());
+        assertThat(converter.convertToString(integers, Locale.ENGLISH), is(""));
     }
 
     private static class TestObject {
