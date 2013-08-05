@@ -2,67 +2,48 @@ package com.nitorcreations.wicket.converter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
-import org.apache.commons.lang3.StringUtils;
-
-import org.apache.wicket.Application;
-import org.apache.wicket.util.convert.IConverter;
 
 /**
  * A converter to convert a String to List and vice versa.
  * Uses the application's converters to further convert the
- * string representations to the elements of the list
+ * string representations to the elements of the list.
+ * <p/>
+ * Example usage:
+ * <pre><code>
+ *     new TextField&lt;List&lt;Integer>>(..) {
+ *         public &lt;C> IConverter&lt;C> getConverter(Class&lt;C> type) {
+ *              return (IConverter&lt;C>) new ListConverter&lt;Integer>(Integer.class);
+ *          }
+ *     }.setType(List.class);
+ * </code></pre>
  *
  * @param <T> type of the single element in a list
+ * @see SetConverter
  */
-public class ListConverter<T> implements IConverter<List<T>> {
+public class ListConverter<T> extends AbstractCollectionConverter<T, List<T>> {
 
-    public static final String DEFAULT_SEPARATOR = "[,; ]+";
-    public static final String DEFAULT_JOINING_SEPARATOR = ", ";
-
-    private final Class<T> type;
-
-    private String separatorRegexp = DEFAULT_SEPARATOR;
-    private String joiningSeparator = DEFAULT_JOINING_SEPARATOR;
-
+    /**
+     * Constructor.
+     * @param type the type of the single element in the list
+     */
     public ListConverter(Class<T> type) {
-        this.type = type;
+        super(type);
     }
 
+    @Override
+    protected List<T> createEmptyCollection() {
+        return new ArrayList<T>();
+    }
+
+    @Override
     public ListConverter<T> setSeparatorRegexp(String regexp) {
-        this.separatorRegexp = regexp;
-        return this;
-    }
-
-    public ListConverter<T> setJoiningSeparator(String separator) {
-        this.joiningSeparator = separator;
+        super.setSeparatorRegexp(regexp);
         return this;
     }
 
     @Override
-    public List<T> convertToObject(String value, Locale locale) {
-        final IConverter<T> converter = getInternalConverter();
-        final List<T> objects = new ArrayList<T>();
-        if (StringUtils.isNotBlank(value)) {
-            for (String s : value.split(separatorRegexp)) {
-                objects.add(converter.convertToObject(s, locale));
-            }
-        }
-        return objects;
-    }
-
-    @Override
-    public String convertToString(List<T> list, Locale locale) {
-        final IConverter<T> converter = getInternalConverter();
-        final List<String> convertedStrings = new ArrayList<String>();
-        for (T t : list) {
-            convertedStrings.add(converter.convertToString(t, locale));
-        }
-        return StringUtils.join(convertedStrings, joiningSeparator);
-    }
-
-    private IConverter<T> getInternalConverter() {
-        return Application.get().getConverterLocator().getConverter(type);
+    public ListConverter<T>  setJoiningSeparator(String separator) {
+        super.setJoiningSeparator(separator);
+        return this;
     }
 }
