@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.google.common.collect.Ordering;
+import org.apache.wicket.util.convert.IConverter;
 
 /**
  * A converter to convert a String to Set and vice versa.
@@ -28,6 +29,7 @@ import com.google.common.collect.Ordering;
  * @see #getSortedForDisplay(java.util.Set)
  */
 public class SetConverter<T> extends AbstractCollectionConverter<T, Set<T>> {
+    private static final long serialVersionUID = 7544350429791459627L;
 
     /**
      * Constructor.
@@ -35,6 +37,15 @@ public class SetConverter<T> extends AbstractCollectionConverter<T, Set<T>> {
      */
     public SetConverter(Class<T> type) {
         super(type);
+    }
+
+    /**
+     * Constructor.
+     * @param type the type of the single element in the set
+     * @param internalConverter the converter to use for the elements of the set
+     */
+    public SetConverter(Class<T> type, IConverter<T> internalConverter) {
+        super(type, internalConverter);
     }
 
     @Override

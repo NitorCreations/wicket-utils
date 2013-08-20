@@ -10,6 +10,7 @@ import org.junit.Test;
 import com.nitorcreations.test.TestApplication;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
+import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.tester.WicketTester;
 
@@ -20,14 +21,7 @@ import static org.junit.Assert.assertThat;
 
 public class ListConverterTest {
 
-    private WicketTester wicketTester = new WicketTester(new TestApplication() {
-        @Override
-        protected IConverterLocator newConverterLocator() {
-            ConverterLocator cl = new ConverterLocator();
-            cl.set(TestObject.class, new TestObjectConverter());
-            return cl;
-        }
-    });
+    private WicketTester wicketTester = new WicketTester(new TestApplication());
 
     @Test
     public void convertsListOfStrings_ThereAndBackAgain() {
@@ -49,7 +43,16 @@ public class ListConverterTest {
     }
 
     @Test
-    public void convertsListOfCustomObjects() {
+    public void convertsListOfCustomObjects_implicitConverter() {
+        wicketTester = new WicketTester(new TestApplication() {
+            @Override
+            protected IConverterLocator newConverterLocator() {
+                ConverterLocator cl = new ConverterLocator();
+                cl.set(TestObject.class, new TestObjectConverter());
+                return cl;
+            }
+        });
+
         ListConverter<TestObject> converter = new ListConverter<TestObject>(TestObject.class);
         List<TestObject> testObjectList = converter.convertToObject("Foo, Bar, Baz", null);
         assertThat(testObjectList, contains(
@@ -61,6 +64,23 @@ public class ListConverterTest {
     }
 
     @Test
+    public void convertsListOfCustomObjects_explicitConverter() {
+        ListConverter<TestObject> converter = new ListConverter<TestObject>(TestObject.class, new TestObjectConverter());
+        List<TestObject> testObjectList = converter.convertToObject("Foo, Bar, Baz", null);
+        assertThat(testObjectList, contains(
+                new TestObject("Foo"),
+                new TestObject("Bar"),
+                new TestObject("Baz")
+        ));
+        assertThat(converter.convertToString(testObjectList, null), is("Foo, Bar, Baz"));
+    }
+
+    @Test(expected = ConversionException.class)
+    public void convertsListOfCustomObjects_noConverter() {
+        new ListConverter<TestObject>(TestObject.class).convertToObject("Foo, Bar, Baz", null);
+    }
+
+    @Test
     public void convertsEmptyStringToEmptyList() {
         ListConverter<Integer> converter = new ListConverter<Integer>(Integer.class);
         List<Integer> integers = converter.convertToObject("", Locale.ENGLISH);
@@ -68,10 +88,10 @@ public class ListConverterTest {
         assertThat(converter.convertToString(integers, Locale.ENGLISH), is(""));
     }
 
-    private static class TestObject {
+    public static class TestObject {
         private final String value;
 
-        private TestObject(String value) {this.value = value;}
+        public TestObject(String value) {this.value = value;}
 
         private String getValue() {
             return value;
@@ -88,7 +108,8 @@ public class ListConverterTest {
         }
     }
 
-    private static class TestObjectConverter implements IConverter<TestObject> {
+    public static class TestObjectConverter implements IConverter<TestObject> {
+        private static final long serialVersionUID = -7500308625938546393L;
 
         @Override
         public TestObject convertToObject(String value, Locale locale) {

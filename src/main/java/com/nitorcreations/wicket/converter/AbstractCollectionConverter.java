@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * @param <T> type of the single element in a list
@@ -16,17 +17,24 @@ import org.apache.wicket.util.convert.IConverter;
  * @see ListConverter
  */
 public abstract class AbstractCollectionConverter<T, S extends Collection<T>> implements IConverter<S> {
+    private static final long serialVersionUID = 4711743213938938686L;
 
     public static final String DEFAULT_SEPARATOR = "[,; ]+";
     public static final String DEFAULT_JOINING_SEPARATOR = ", ";
 
     private final Class<T> type;
+    private final IConverter<T> internalConverter;
 
     private String separatorRegexp = DEFAULT_SEPARATOR;
     private String joiningSeparator = DEFAULT_JOINING_SEPARATOR;
 
-    public AbstractCollectionConverter(Class<T> type) {
-        this.type = type;
+    protected AbstractCollectionConverter(Class<T> type) {
+        this(type, null);
+    }
+
+    protected AbstractCollectionConverter(Class<T> type, IConverter<T> internalConverter) {
+        this.type = Args.notNull(type, "type");
+        this.internalConverter = internalConverter;
     }
 
     public AbstractCollectionConverter<T, S> setSeparatorRegexp(String regexp) {
@@ -79,6 +87,8 @@ public abstract class AbstractCollectionConverter<T, S extends Collection<T>> im
     }
 
     private IConverter<T> getInternalConverter() {
-        return Application.get().getConverterLocator().getConverter(type);
+        return internalConverter != null ?
+                internalConverter :
+                Application.get().getConverterLocator().getConverter(type);
     }
 }

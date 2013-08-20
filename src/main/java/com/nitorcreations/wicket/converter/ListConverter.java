@@ -3,6 +3,8 @@ package com.nitorcreations.wicket.converter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.util.convert.IConverter;
+
 /**
  * A converter to convert a String to List and vice versa.
  * Uses the application's converters to further convert the
@@ -21,6 +23,7 @@ import java.util.List;
  * @see SetConverter
  */
 public class ListConverter<T> extends AbstractCollectionConverter<T, List<T>> {
+    private static final long serialVersionUID = 347862657933465770L;
 
     /**
      * Constructor.
@@ -28,6 +31,15 @@ public class ListConverter<T> extends AbstractCollectionConverter<T, List<T>> {
      */
     public ListConverter(Class<T> type) {
         super(type);
+    }
+
+    /**
+     * Constructor.
+     * @param type the type of the single element in the list
+     * @param internalConverter the converter to use for the elements of the list
+     */
+    public ListConverter(Class<T> type, IConverter<T> internalConverter) {
+        super(type, internalConverter);
     }
 
     @Override
