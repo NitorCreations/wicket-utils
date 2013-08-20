@@ -1,3 +1,6 @@
+# 1.5
+- Added possibility to `SetConverter` and `ListConverter` to supply the internal converter as a constructor parameter instead of using a global setting from the application
+
 # 1.4
 - Added `SetConverter` similar to `ListConverter`
 - Added `SetToListWrapperModel` to facilitate using sets as the backing collection for, e.g., list views 
