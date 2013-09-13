@@ -61,6 +61,11 @@ public class AjaxElementChoice<T extends Serializable> extends FormComponent<T> 
         setConvertedInput(selection.getObject());
     }
 
+    @Override
+    public boolean checkRequired() {
+        return !isRequired() || selection.getObject() != null;
+    }
+
     public static class ChoiceItem<T extends Serializable> extends WebMarkupContainer implements IGenericComponent<T> {
         private static final long serialVersionUID = -7175689672489559406L;
 

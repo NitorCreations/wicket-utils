@@ -32,15 +32,25 @@ public class AjaxElementChoiceTest {
 
     private IModel<Choice> model = new Model<Choice>();
 
-    private void start(Choice choice) {
+    private void start(Choice choice, boolean required) {
         model.setObject(choice);
-        page = new TestPage(model);
+        page = new TestPage(model, required);
         wicketTester.startPage(page);
     }
 
     @Test
+    public void requiredValidated() {
+        start(null, true);
+        submitForm();
+        wicketTester.assertErrorMessages("choice.Required");
+        clickChoiceItem(Choice.FIRST);
+        submitForm();
+        wicketTester.assertNoErrorMessage();
+    }
+
+    @Test
     public void changesSelectionOnClickAndModelValueOnSubmit() {
-        start(null);
+        start(null, false);
         assertThat(model.getObject(), nullValue());
 
         clickChoiceItem(Choice.FIRST);
@@ -56,7 +66,7 @@ public class AjaxElementChoiceTest {
 
     @Test
     public void cssClassesAdded_startedWithCorrectSelection() {
-        start(Choice.SECOND);
+        start(Choice.SECOND, false);
         assertThat(select(AjaxElementChoice.class).firstFrom(page), hasTag(wicketTester).with(CLASS_ATTRIBUTE, PARENT_CLASS));
 
         assertThat(choiceItem(Choice.FIRST), hasTag(wicketTester).with(CLASS_ATTRIBUTE, ITEM_CLASS));
@@ -94,15 +104,15 @@ public class AjaxElementChoiceTest {
 
         private static final long serialVersionUID = -7303890976885603732L;
 
-        public TestPage(IModel<Choice> model) {
+        public TestPage(IModel<Choice> model, boolean required) {
             Form<Void> form = new Form<Void>("form");
             add(form);
             final AjaxElementChoice<Choice> choice = new AjaxElementChoice<Choice>("choice", model);
             form.add(choice);
+            choice.setRequired(required);
             choice.add(new ChoiceItem<Choice>("first", Model.of(Choice.FIRST))
                     .add(new Label("name", Model.of("I primi"))));
             choice.add(new ChoiceItem<Choice>("second", Model.of(Choice.SECOND)).add(new Label("name", Model.of("I secondi"))));
         }
-
     }
 }
