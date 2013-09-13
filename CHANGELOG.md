@@ -1,3 +1,6 @@
+# 1.6
+- Added `AjaxElementChoice<T>` to make arbitrary components work similarly to a radio selection
+
 # 1.5
 - Added possibility to `SetConverter` and `ListConverter` to supply the internal converter as a constructor parameter instead of using a global setting from the application
 
