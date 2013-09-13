@@ -27,8 +27,23 @@ public class AjaxElementChoice<T extends Serializable> extends FormComponent<T> 
         selection.setObject(getModelObject());
     }
 
-    protected void select(T object, AjaxRequestTarget target) {
+    protected final void select(T object, ChoiceItem<T> selectedItem, AjaxRequestTarget target) {
         this.selection.setObject(object);
+        updateByAjax(object, selectedItem, target);
+    }
+
+    /**
+     * Update the view when selection has changed. Defaults to adding the whole {@link AjaxElementChoice} to the ajax
+     * request target. The default behavior might be suboptimal in some situations. Override this method to provide
+     * different way of updating the view side.
+     * <p/>
+     * Overrides do not need to address model changes.
+     *
+     * @param selection the newly selected option
+     * @param selectedItem the item that is selected
+     * @param target the current ajax request target
+     */
+    protected void updateByAjax(T selection, ChoiceItem<T> selectedItem, AjaxRequestTarget target) {
         AjaxUtil.add(target, this);
     }
 
@@ -99,7 +114,7 @@ public class AjaxElementChoice<T extends Serializable> extends FormComponent<T> 
 
             @Override
             protected void onEvent(AjaxRequestTarget target) {
-                getChoice().select(getModelObject(), target);
+                getChoice().select(getModelObject(), ChoiceItem.this, target);
             }
         }
 
