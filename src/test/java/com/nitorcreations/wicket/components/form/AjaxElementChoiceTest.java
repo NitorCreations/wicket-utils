@@ -14,9 +14,13 @@ import org.apache.wicket.util.tester.WicketTester;
 import static com.nitorcreations.WicketMatchers.hasModelObject;
 import static com.nitorcreations.WicketMatchers.hasTag;
 import static com.nitorcreations.test.wicket.Selection.select;
+import static com.nitorcreations.wicket.components.form.AjaxElementChoice.CLASS_ATTRIBUTE;
+import static com.nitorcreations.wicket.components.form.AjaxElementChoice.ITEM_CLASS;
+import static com.nitorcreations.wicket.components.form.AjaxElementChoice.PARENT_CLASS;
 import static com.nitorcreations.wicket.components.form.AjaxElementChoice.SELECTED_CLASS;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
@@ -51,14 +55,21 @@ public class AjaxElementChoiceTest {
     }
 
     @Test
-    public void selectedItemHasCssClass_startedWithCorrectSelection() {
+    public void cssClassesAdded_startedWithCorrectSelection() {
         start(Choice.SECOND);
-        assertThat(choiceItem(Choice.FIRST), not(hasTag(wicketTester).with("class", SELECTED_CLASS)));
-        assertThat(choiceItem(Choice.SECOND), hasTag(wicketTester).with("class", SELECTED_CLASS));
+        assertThat(select(AjaxElementChoice.class).firstFrom(page), hasTag(wicketTester).with(CLASS_ATTRIBUTE, PARENT_CLASS));
+
+        assertThat(choiceItem(Choice.FIRST), hasTag(wicketTester).with(CLASS_ATTRIBUTE, ITEM_CLASS));
+        assertThat(choiceItem(Choice.SECOND), hasTag(wicketTester).with(CLASS_ATTRIBUTE, allOf(
+                containsString(SELECTED_CLASS), containsString(ITEM_CLASS)
+        )));
 
         clickChoiceItem(Choice.FIRST);
-        assertThat(choiceItem(Choice.FIRST), hasTag(wicketTester).with("class", SELECTED_CLASS));
-        assertThat(choiceItem(Choice.SECOND), not(hasTag(wicketTester).with("class", SELECTED_CLASS)));
+        assertThat(choiceItem(Choice.FIRST), hasTag(wicketTester).with(CLASS_ATTRIBUTE, allOf(
+                containsString(SELECTED_CLASS), containsString(ITEM_CLASS)
+        )));
+        assertThat(choiceItem(Choice.SECOND), hasTag(wicketTester).with(CLASS_ATTRIBUTE, ITEM_CLASS));
+
     }
 
     private void clickChoiceItem(Choice choice) {

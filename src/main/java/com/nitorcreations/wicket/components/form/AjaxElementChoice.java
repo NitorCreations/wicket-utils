@@ -15,9 +15,13 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
 
 public class AjaxElementChoice<T extends Serializable> extends FormComponent<T> {
+
     private static final long serialVersionUID = 1711555970707895563L;
 
-    public static final String SELECTED_CLASS = "ajaxElementChoice-selected";
+    public static final String CLASS_ATTRIBUTE = "class";
+    public static final String PARENT_CLASS = "ajaxElementChoice";
+    public static final String ITEM_CLASS = "ajaxElementChoice-item";
+    public static final String SELECTED_CLASS = "ajaxElementChoice-item-selected";
 
     private final IModel<T> selection = new Model<T>();
 
@@ -25,6 +29,7 @@ public class AjaxElementChoice<T extends Serializable> extends FormComponent<T> 
         super(id, model);
         setOutputMarkupId(true);
         selection.setObject(getModelObject());
+        add(AttributeModifier.append(CLASS_ATTRIBUTE, PARENT_CLASS));
     }
 
     protected final void select(T object, ChoiceItem<T> selectedItem, AjaxRequestTarget target) {
@@ -65,7 +70,8 @@ public class AjaxElementChoice<T extends Serializable> extends FormComponent<T> 
             super(id, model);
             setOutputMarkupId(true);
             add(new ChoiceClickBehavior());
-            add(AttributeModifier.append("class", new IsSelectedModel()));
+            add(AttributeModifier.append(CLASS_ATTRIBUTE, ITEM_CLASS));
+            add(AttributeModifier.append(CLASS_ATTRIBUTE, new IsSelectedModel()));
         }
 
 
