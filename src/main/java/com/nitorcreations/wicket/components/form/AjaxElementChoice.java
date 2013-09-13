@@ -14,14 +14,54 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
 
+/**
+ * A form component that works like a radio selection, but uses arbitrary clickable elements as choices.
+ * On selection, the clicked element's model object will be made the selection of the {@code AjaxElementChoice}.
+ * The selected element is then given the class {@link #SELECTED_CLASS} by updating the whole element by
+ * Wicket's ajax capabilities, which might be slow if the selection contains, e.g., images. To optimize the ajax
+ * updating behavior, override the {@link #updateByAjax(java.io.Serializable, com.nitorcreations.wicket.components.form.AjaxElementChoice.ChoiceItem, org.apache.wicket.ajax.AjaxRequestTarget)} method
+ *
+ * <h4>Example:</h4>
+ * <code><pre>
+ *     AjaxElementChoice&lt;Boolean> choice = new AjaxElementChoice&lt;Boolean>("choice", new Model&lt;Boolean>());
+ *     choice.add(new ChoiceItem&lt;Boolean("first", Model.of(true))
+ *             .add(new Label("name", "True choice"));
+ *     choice.add(new ChoiceItem&lt;Boolean("second", Model.of(false))
+ *             .add(new Label("name", "False choice"));
+ *     add(choice.setRequired(true));
+ * </pre></code>
+ *
+ * <h4>Corresponding markup</h4>
+ * <code><pre>
+ *
+ *     &lt;div wicket:id="choice">
+ *         &lt;div wicket:id="first">
+ *             &lt;h2>The title&lt;/h2>
+ *             &lt;span wicket:id="name" /&gt;
+ *         &lt;/div>
+ *
+ *         &lt;div wicket:id="first">
+ *             &lt;h2>The title&lt;/h2>
+ *             &lt;span wicket:id="name" /&gt;
+ *         &lt;/div>
+ *     &lt;/div>
+ *
+ * </pre></code>
+ *
+ * @param <T> the type of the selected items
+ * @see #updateByAjax(java.io.Serializable, com.nitorcreations.wicket.components.form.AjaxElementChoice.ChoiceItem, org.apache.wicket.ajax.AjaxRequestTarget)
+ */
 public class AjaxElementChoice<T extends Serializable> extends FormComponent<T> {
 
-    private static final long serialVersionUID = 1711555970707895563L;
-
     public static final String CLASS_ATTRIBUTE = "class";
+
     public static final String PARENT_CLASS = "ajaxElementChoice";
+
     public static final String ITEM_CLASS = "ajaxElementChoice-item";
+
     public static final String SELECTED_CLASS = "ajaxElementChoice-item-selected";
+
+    private static final long serialVersionUID = 1711555970707895563L;
 
     private final IModel<T> selection = new Model<T>();
 
@@ -66,6 +106,10 @@ public class AjaxElementChoice<T extends Serializable> extends FormComponent<T> 
         return !isRequired() || selection.getObject() != null;
     }
 
+    /**
+     * @see AjaxElementChoice
+     * @param <T>
+     */
     public static class ChoiceItem<T extends Serializable> extends WebMarkupContainer implements IGenericComponent<T> {
         private static final long serialVersionUID = -7175689672489559406L;
 
@@ -78,7 +122,6 @@ public class AjaxElementChoice<T extends Serializable> extends FormComponent<T> 
             add(AttributeModifier.append(CLASS_ATTRIBUTE, ITEM_CLASS));
             add(AttributeModifier.append(CLASS_ATTRIBUTE, new IsSelectedModel()));
         }
-
 
         public boolean isSelected() {
             return getChoice().isSelected(getModelObject());
@@ -104,20 +147,21 @@ public class AjaxElementChoice<T extends Serializable> extends FormComponent<T> 
             setDefaultModel(model);
         }
 
-        @Override
-        public void setModelObject(T object) {
-            setDefaultModelObject(object);
-        }
-
         @SuppressWarnings("unchecked")
         @Override
         public T getModelObject() {
             return (T) getDefaultModelObject();
         }
 
+        @Override
+        public void setModelObject(T object) {
+            setDefaultModelObject(object);
+        }
+
         private class ChoiceClickBehavior extends AjaxEventBehavior {
-            private static final long serialVersionUID = -1732082937259155342L;
             public static final String ON_CLICK = "onClick";
+
+            private static final long serialVersionUID = -1732082937259155342L;
 
             public ChoiceClickBehavior() {
                 super(ON_CLICK);
