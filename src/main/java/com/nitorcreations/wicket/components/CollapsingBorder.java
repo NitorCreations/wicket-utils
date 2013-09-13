@@ -14,8 +14,7 @@ import org.apache.wicket.model.StringResourceModel;
  * A border that adds a ajax fallback toggling link for the content
  */
 public class CollapsingBorder extends Border {
-
-    private  WebMarkupContainer contents;
+    private static final long serialVersionUID = -3385212703086878145L;
 
     private final IModel<Boolean> contentVisible;
 
@@ -28,7 +27,9 @@ public class CollapsingBorder extends Border {
         this.contentVisible = Model.of(visibleByDefault);
         setOutputMarkupId(true);
 
-        contents = new WebMarkupContainer("container") {
+        WebMarkupContainer contents = new WebMarkupContainer("container") {
+            private static final long serialVersionUID = 4929018760297723839L;
+
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -46,6 +47,8 @@ public class CollapsingBorder extends Border {
     }
 
     private class ContentToggleLink extends AjaxFallbackLink<Void> {
+        private static final long serialVersionUID = 5336746033204778794L;
+
         public ContentToggleLink(String id) {
             super(id);
 
