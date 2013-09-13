@@ -22,6 +22,9 @@ Available in Maven central repository. Add this to your `pom.xml`
 - `MaxLengthTextField` 
 - `ShorteningLabel` - shortens the display value and adds an ellipsis
 
+### Form components
+- `AjaxElementChoice` - works similarly to a radio group but on arbitrary components
+
 ### Converter
 - Converters for Joda-Time's `LocalDate`, `LocalTime`, and `DateTime`
 
