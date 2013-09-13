@@ -30,8 +30,8 @@ public class CollapsingBorderTest {
 
     @Before
     public void setup() {
-        TestApplication.expectStringMessage("toggleText.true", "Hide");
-        TestApplication.expectStringMessage("toggleText.false", "Show");
+        TestApplication.expectStringMessage(CollapsingBorder.class, "toggleText.true", "Hide");
+        TestApplication.expectStringMessage(CollapsingBorder.class, "toggleText.false", "Show");
         content = new Label("label", "Text");
     }
 

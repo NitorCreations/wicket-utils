@@ -52,7 +52,7 @@ public class CollapsingBorder extends Border {
         public ContentToggleLink(String id) {
             super(id);
 
-            add(new Label("toggleText", new StringResourceModel("toggleText.${}", contentVisible)));
+            add(new Label("toggleText", new StringResourceModel("toggleText.${}", CollapsingBorder.this, contentVisible)));
         }
 
         @Override
