@@ -11,7 +11,7 @@ Available in Maven central repository. Add this to your `pom.xml`
 <dependency>
   <groupId>com.nitorcreations</groupId>
   <artifactId>wicket-components</artifactId>
-  <version>1.1</version>
+  <version>1.7</version>
 </dependency>
 ```
 
@@ -21,6 +21,7 @@ Available in Maven central repository. Add this to your `pom.xml`
 - `ViewSizeToolbar` - change the view size of a `DataTable`
 - `MaxLengthTextField` 
 - `ShorteningLabel` - shortens the display value and adds an ellipsis
+- `CollapsingBorder` and `CollapsingContainer` for ajax based collapsing content
 
 ### Form components
 - `AjaxElementChoice` - works similarly to a radio group but on arbitrary components

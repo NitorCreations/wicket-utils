@@ -1,3 +1,6 @@
+# 1.7
+- Added `CollapsingContainer`
+
 # 1.6
 - Added `AjaxElementChoice<T>` to make arbitrary components work similarly to a radio selection
 
